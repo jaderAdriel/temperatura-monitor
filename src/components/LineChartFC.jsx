@@ -4,8 +4,7 @@ import { onValue, ref } from 'firebase/database';
 import { Line } from 'react-chartjs-2'
 import { Chart } from 'chart.js/auto';
 import moment from 'moment/moment';
-import { MdOutlineUpdate } from 'react-icons/md'
-import { FiThermometer } from 'react-icons/fi'
+import { MdOutlineUpdate, Md123 } from 'react-icons/md'
 
 
 import './LineChartFC.scss'
@@ -16,12 +15,10 @@ let data = {
     }],
 };
 
-function LineChartFC() {
+function LineChartFC({firebasePath, name ,unity, valorAtual}) {
     const history = useRef();
-    const lastChecked = useRef();
-    const valorAtual = useRef();
 
-    const query = ref(db, '/temperatura/valor');
+    const query = ref(db, firebasePath + '/valor');
     (function () {
         onValue(query, (firebaseData) => {
             const value = firebaseData.val() || '';
@@ -33,9 +30,8 @@ function LineChartFC() {
     })();
 
     (function () {
-      onValue(ref(db, '/temperatura/'), (firebaseData) => {
+      onValue(ref(db, firebasePath), (firebaseData) => {
           const value = firebaseData.val() || '';
-          lastChecked.current.innerText = value.horario;
           
           if (!valorAtual.current) {
             valorAtual.current.innerText = value.valor;
@@ -67,7 +63,7 @@ function LineChartFC() {
             plugins: {
               title: {
                 display: true,
-                text: 'Temperatura (ºC)'
+                text:  `${name} (${unity})`
               },
               legend: {
                 display: false
@@ -75,18 +71,16 @@ function LineChartFC() {
               tooltip: {
                 callbacks: {
                   label: function(context) {
-                    return ' ' + context.parsed.y + '°C';
+                    return ' ' + context.parsed.y + " " +unity;
                   }
                 }
               }
             },
             scales: {
               y: {
-                min: 10,
-                max: 50,
                 ticks: {
                   callback: function(value, index, values) {
-                    return value + '°C';
+                    return value + " " + unity;
                   }
                 }
               },
@@ -107,9 +101,6 @@ function LineChartFC() {
             
           }}
           />
-         
-          <p className='info'> <MdOutlineUpdate size={20}/> <small ref={lastChecked}></small></p>
-          <p className='info'> <FiThermometer size={20}/> <small ref={valorAtual}></small> °C</p>
           
       </div>
     )

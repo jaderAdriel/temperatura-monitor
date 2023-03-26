@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { MdClose } from "react-icons/md";
+import { BsHeartPulseFill } from "react-icons/bs";
 
 import './Sidebar.scss'
 import logo from '../assets/icons/heart-pulse.svg'
@@ -25,8 +26,8 @@ function Sidebar({ active }) {
             
             <div className="top">
                 <div className="logo">
-                    <img src={logo} alt="logo" className="media" />
-                    <h2><span className="">LO</span>GO</h2>
+                    <BsHeartPulseFill size={30} color='red' />
+                    <h2><span className="secondary">Vital</span>Check</h2>
                 </div>
                 <MdClose className="close" id="close-btn" onClick={() => handleClick()}/>
             </div>
